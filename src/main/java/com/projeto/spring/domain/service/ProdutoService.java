@@ -1,10 +1,12 @@
 package com.projeto.spring.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.projeto.spring.api.dto.produto.ProdutoRequestDTO;
 import com.projeto.spring.api.dto.produto.ProdutoResponseDTO;
+import com.projeto.spring.api.exception.EntidadeEmUsoException;
 import com.projeto.spring.api.exception.EntidadeNaoEncontradaException;
 import com.projeto.spring.api.mapper.ProdutoMapper;
 import com.projeto.spring.domain.model.Produto;
@@ -41,8 +43,11 @@ public class ProdutoService {
 	}
 	
 	public void deletar(Long id) {
-		Produto produto = repo.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Produto de id %d não encontrado", id)));
-		repo.deleteById(produto.getId());
-	
+		try {
+			Produto produto = repo.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Produto de id %d não encontrado", id)));
+			repo.deleteById(produto.getId());
+		} catch(DataIntegrityViolationException e) {
+			throw new EntidadeEmUsoException(String.format("Produto de id %d está em uso!", id));
+		}
 	}
 }

@@ -6,9 +6,13 @@ insert into produto(id,nome,descricao,preco) values (1, "Teclado Mecanico", "Swi
 insert into produto(id,nome,descricao,preco) values (2, "Tv", "55 polegadas", 1499)
 insert into produto(id,nome,descricao,preco) values (3, "Mouse", "dpi 16000", 200)
 
-insert into pedido(id,cliente_id) values(1,2)
-insert into pedido(id,cliente_id) values(2,1)
-insert into pedido(id,cliente_id) values(3,3)
+insert into forma_pagamento(id,tipo) values (1,'PIX')
+insert into forma_pagamento(id,tipo) values (2,'DEBITO')
+insert into forma_pagamento(id,tipo) values (3,'BOLETO')
+
+insert into pedido(id,cliente_id,forma_pagamento_id,valor_compra) values(1,2,1,499)
+insert into pedido(id,cliente_id,forma_pagamento_id,valor_compra) values(2,1,2,1499)
+insert into pedido(id,cliente_id,forma_pagamento_id,valor_compra) values(3,3,3,499)
 
 insert into pedido_produto(pedido_id,produto_id) values(1,1)
 insert into pedido_produto(pedido_id,produto_id) values(1,3)

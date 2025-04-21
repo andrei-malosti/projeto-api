@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.projeto.spring.api.dto.produto.ProdutoRequestDTO;
 import com.projeto.spring.api.dto.produto.ProdutoResponseDTO;
+import com.projeto.spring.api.exception.EntidadeEmUsoException;
 import com.projeto.spring.api.exception.EntidadeNaoEncontradaException;
 import com.projeto.spring.domain.service.ProdutoService;
 
@@ -57,6 +58,8 @@ public class ProdutoController {
 			return ResponseEntity.noContent().build();
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
+		} catch (EntidadeEmUsoException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
 	}
 }

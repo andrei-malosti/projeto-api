@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.projeto.spring.api.dto.cliente.ClienteRequestDTO;
 import com.projeto.spring.api.dto.cliente.ClienteResponseDTO;
+import com.projeto.spring.api.exception.EntidadeEmUsoException;
 import com.projeto.spring.api.exception.EntidadeNaoEncontradaException;
 import com.projeto.spring.api.mapper.ClienteMapper;
 import com.projeto.spring.domain.model.Cliente;
@@ -48,9 +50,11 @@ public class ClienteService {
 	}
 	
 	public void excluirCliente(Long id) {
-		Cliente cliente = repo.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Cliente de id %d não encontrado", id)));
-		repo.deleteById(cliente.getId());
+		try {
+			Cliente cliente = repo.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Cliente de id %d não encontrado", id)));
+			repo.deleteById(cliente.getId());
+		} catch (DataIntegrityViolationException e) {
+			throw new EntidadeEmUsoException(String.format("Cliente de id %d está em uso!", id));
+		}
 	}
-	
-	
 }

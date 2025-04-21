@@ -14,7 +14,5 @@ public interface ClienteMapper {
 	Cliente toEntity(ClienteRequestDTO dto);
 	
 	ClienteResponseDTO toDTO(Cliente cliente);
-	
-	ClienteRequestDTO toRequestDTO(Cliente cliente);
 
 }

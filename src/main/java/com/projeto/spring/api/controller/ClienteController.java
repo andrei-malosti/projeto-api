@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.projeto.spring.api.dto.cliente.ClienteRequestDTO;
 import com.projeto.spring.api.dto.cliente.ClienteResponseDTO;
+import com.projeto.spring.api.exception.EntidadeEmUsoException;
 import com.projeto.spring.api.exception.EntidadeNaoEncontradaException;
 import com.projeto.spring.domain.service.ClienteService;
 
@@ -64,6 +65,8 @@ public class ClienteController {
 			return ResponseEntity.noContent().build();
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
+		} catch (EntidadeEmUsoException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
 	}
 

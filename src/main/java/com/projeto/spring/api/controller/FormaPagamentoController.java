@@ -1,5 +1,7 @@
 package com.projeto.spring.api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,59 +12,53 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.projeto.spring.api.dto.pedido.PedidoRequestDTO;
-import com.projeto.spring.api.dto.pedido.PedidoResponseDTO;
+import com.projeto.spring.api.dto.formaPagamento.FormaPagamentoDTO;
 import com.projeto.spring.api.exception.EntidadeEmUsoException;
 import com.projeto.spring.api.exception.EntidadeNaoEncontradaException;
-import com.projeto.spring.domain.service.PedidoService;
-
-import jakarta.validation.Valid;
+import com.projeto.spring.domain.service.FormaPagamentoService;
 
 @RestController
-@RequestMapping("/pedidos")
-public class PedidoController {
-	
-	@Autowired
-	private PedidoService service;
+@RequestMapping("/formas-pagamento")
+public class FormaPagamentoController {
 
-	@GetMapping("/{pedidoId}")
-	public ResponseEntity<?> buscarPorId(@PathVariable Long pedidoId){
-		try {
-			return ResponseEntity.ok().body(service.buscarPorId(pedidoId));
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}
-	}
+	@Autowired
+	private FormaPagamentoService service;
 	
 	@PostMapping
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public ResponseEntity<?> salvar(@RequestBody @Valid PedidoRequestDTO request) {
+	public ResponseEntity<FormaPagamentoDTO> salvar(@RequestBody FormaPagamentoDTO dto) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(service.salvar(dto));
+	}
+	
+	@GetMapping
+	public List<FormaPagamentoDTO> listar() {
+		return service.buscarTodos();
+	}
+	
+	@GetMapping("/{formaPagamentoId}")
+	public ResponseEntity<?> buscar(@PathVariable Long formaPagamentoId){
 		try {
-			PedidoResponseDTO dto = service.salvar(request);
-			return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+
+			return ResponseEntity.ok().body(service.buscarPorId(formaPagamentoId));
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
 	}
 	
-	@PutMapping("/{pedidoId}")
-	public ResponseEntity<?> atualizar(@PathVariable Long pedidoId, @RequestBody PedidoRequestDTO dto){
+	@PutMapping("/{formaPagamentoId}")
+	public ResponseEntity<?> atualizar(@PathVariable Long formaPagamentoId, @RequestBody FormaPagamentoDTO dto){
 		try {
-			return ResponseEntity.ok().body(service.atualizar(pedidoId, dto));
+			return ResponseEntity.ok().body(service.atualizar(formaPagamentoId, dto));
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 	
-	@DeleteMapping("/{pedidoId}")
-	public ResponseEntity<?> deletar(@PathVariable Long pedidoId){
+	@DeleteMapping("/{formaPagamentoId}")
+	public ResponseEntity<?> deletar(@PathVariable Long formaPagamentoId){
 		try {
-			service.deletar(pedidoId);
+			service.deletar(formaPagamentoId);
 			return ResponseEntity.noContent().build();
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
@@ -70,4 +66,5 @@ public class PedidoController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
 	}
+	
 }

@@ -1,8 +1,10 @@
 package com.projeto.spring.domain.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +25,9 @@ public class Pedido {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include
 	private Long id;
+	
+	@Column(nullable = false)
+	private BigDecimal valorCompra;
 
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
@@ -32,6 +37,8 @@ public class Pedido {
 	@JoinTable(name = "pedido_produto", joinColumns = @JoinColumn(name = "pedido_id"), inverseJoinColumns = @JoinColumn(name = "produto_id"))
 	private List<Produto> produtos = new ArrayList<>();
 	
+	@ManyToOne
+	@JoinColumn(name = "forma_pagamento_id")
+	private FormaPagamento pagamento;
 	
-
 }
