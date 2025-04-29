@@ -3,7 +3,6 @@ package com.projeto.spring.api.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,9 +24,12 @@ import com.projeto.spring.domain.service.ClienteService;
 @RequestMapping("/clientes")
 public class ClienteController {
 	
-	@Autowired
-	private ClienteService service;
+	private final ClienteService service;
 	
+	public ClienteController(ClienteService service) {
+		this.service = service;
+	}
+
 	@GetMapping
 	public ResponseEntity<List<ClienteResponseDTO>> listar(){
 		return ResponseEntity.ok().body(Optional.of(service.listarCliente()).orElseThrow(() -> new RuntimeException("nenhum valor na lista")));

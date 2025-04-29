@@ -3,7 +3,7 @@ package com.projeto.spring.domain.service;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -24,21 +24,25 @@ import com.projeto.spring.domain.repository.ProdutoRepository;
 @Service
 public class PedidoService {
 
-	@Autowired
-	private PedidoRepository repo;
+	private final PedidoRepository repo;
 	
-	@Autowired
-	private ProdutoRepository produtoRepository;
+	private final ProdutoRepository produtoRepository;
 	
-	@Autowired
-	private ClienteRepository clienteRepository;
+	private final ClienteRepository clienteRepository;
 	
-	@Autowired
-	private FormaPagamentoRepository formaPagamentoRepository;
+	private final FormaPagamentoRepository formaPagamentoRepository;
 	
-	@Autowired
-	private PedidoMapper mapper;
+	private final PedidoMapper mapper;
 	
+	public PedidoService(PedidoRepository repo,ProdutoRepository produtoRepository,ClienteRepository clienteRepository,FormaPagamentoRepository formaPagamentoRepository,PedidoMapper mapper) {
+		this.repo = repo;
+		this.produtoRepository = produtoRepository;
+		this.clienteRepository = clienteRepository;
+		this.formaPagamentoRepository = formaPagamentoRepository;
+		this.mapper = mapper;
+	}
+	
+	@Cacheable(value = "pedido", key = "#id")
 	public PedidoResponseDTO buscarPorId(Long id) {
 		Pedido pedido = repo.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Pedido de id %d não encontrado", id)));
 		return mapper.toResponseDTO(pedido);

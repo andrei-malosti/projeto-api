@@ -3,7 +3,7 @@ package com.projeto.spring.domain.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +18,14 @@ import com.projeto.spring.domain.repository.ClienteRepository;
 @Service
 public class ClienteService {
 	
-	@Autowired
-	private ClienteRepository repo;
+	private final ClienteRepository repo;
 	
-	@Autowired
-	private ClienteMapper clienteMapper;
+	private final ClienteMapper clienteMapper;
+	
+	public ClienteService(ClienteRepository repo, ClienteMapper clienteMapper) {
+		this.repo = repo;
+		this.clienteMapper = clienteMapper;
+	}
 
 	public ClienteResponseDTO salvar(ClienteRequestDTO request) {
 		Cliente cliente = clienteMapper.toEntity(request);
@@ -34,6 +37,7 @@ public class ClienteService {
 		return repo.findAll().stream().map(clienteMapper::toDTO).collect(Collectors.toList());
 	}
 	
+	@Cacheable(value = "cliente", key = "#id")
 	public ClienteResponseDTO buscarPorId(Long id) {
 		Cliente cliente = repo.findById(id)
 				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Cliente de id %d não encontrado", id)));

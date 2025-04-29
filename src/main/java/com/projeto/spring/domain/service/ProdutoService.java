@@ -1,6 +1,6 @@
 package com.projeto.spring.domain.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +15,16 @@ import com.projeto.spring.domain.repository.ProdutoRepository;
 @Service
 public class ProdutoService {
 
-	@Autowired
-	private ProdutoRepository repo;
+	private final ProdutoRepository repo;
 	
-	@Autowired
-	private ProdutoMapper mapper;
+	private final ProdutoMapper mapper;
 	
+	public ProdutoService(ProdutoRepository repo,ProdutoMapper mapper) {
+		this.repo = repo;
+		this.mapper = mapper;
+	}
+	
+	@Cacheable(value = "product", key = "#id")
 	public ProdutoResponseDTO buscarPorId(Long id) {
 		Produto produto = repo.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Produto de id %d não encontrado", id)));
 		return mapper.toResponseDTO(produto);

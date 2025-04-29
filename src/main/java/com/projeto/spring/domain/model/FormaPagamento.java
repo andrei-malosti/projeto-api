@@ -1,5 +1,7 @@
 package com.projeto.spring.domain.model;
 
+import java.io.Serializable;
+
 import com.projeto.spring.domain.enumerado.TipoPagamento;
 
 import jakarta.persistence.Column;
@@ -15,7 +17,10 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class FormaPagamento {
+public class FormaPagamento implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EqualsAndHashCode.Include

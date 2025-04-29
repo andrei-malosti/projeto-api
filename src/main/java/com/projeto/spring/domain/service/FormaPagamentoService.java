@@ -3,7 +3,6 @@ package com.projeto.spring.domain.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +16,14 @@ import com.projeto.spring.domain.repository.FormaPagamentoRepository;
 @Service
 public class FormaPagamentoService {
 
-	@Autowired
-	private FormaPagamentoRepository repo;
+	private final FormaPagamentoRepository repo;
 	
-	@Autowired
-	private FormaPagamentoMapper mapper;
+	private final FormaPagamentoMapper mapper;
 	
+	public FormaPagamentoService(FormaPagamentoRepository repo,FormaPagamentoMapper mapper) {
+		this.repo = repo;
+		this.mapper = mapper;
+	}
 	
 	public List<FormaPagamentoDTO> buscarTodos() {
 		return repo.findAll().stream().map(mapper::toDTO).collect(Collectors.toList());

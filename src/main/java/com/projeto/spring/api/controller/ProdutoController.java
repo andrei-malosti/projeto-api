@@ -1,6 +1,5 @@
 package com.projeto.spring.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +22,11 @@ import com.projeto.spring.domain.service.ProdutoService;
 @RequestMapping("/produtos")
 public class ProdutoController {
 	
-	@Autowired
-	private ProdutoService service;
+	private final ProdutoService service;
+	
+	public ProdutoController(ProdutoService service) {
+		this.service = service;
+	}
 
 	@GetMapping("/{produtoId}")
 	public ResponseEntity<?> buscarPorId(@PathVariable Long produtoId) {

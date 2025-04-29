@@ -1,6 +1,5 @@
 package com.projeto.spring.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,8 +24,11 @@ import jakarta.validation.Valid;
 @RequestMapping("/pedidos")
 public class PedidoController {
 	
-	@Autowired
-	private PedidoService service;
+	private final PedidoService service;
+	
+	public PedidoController(PedidoService service) {
+		this.service = service;
+	}
 
 	@GetMapping("/{pedidoId}")
 	public ResponseEntity<?> buscarPorId(@PathVariable Long pedidoId){

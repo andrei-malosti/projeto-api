@@ -1,12 +1,11 @@
 package com.projeto.spring.api.dto.cliente;
 
-import lombok.Builder;
+import java.io.Serializable;
 
-@Builder
-public record ClienteRequestDTO(
+public record ClienteRequestDTO (
 		Long id,
 		String nome,
 		String cpf,
-		String senha) {
+		String senha) implements Serializable {
 
 }
