@@ -44,6 +44,7 @@ public class ClienteService {
 		return clienteMapper.toDTO(cliente);
 	}
 	
+	@Cacheable(value ="clientes", key = "#id")
 	public ClienteResponseDTO atualizarCliente(Long id, ClienteRequestDTO dto) {
 		Cliente cliente = repo.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Cliente de id %d não encontrado", id)));
 		cliente.setNome(dto.nome());
